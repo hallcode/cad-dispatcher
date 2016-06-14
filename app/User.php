@@ -58,4 +58,16 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Location');
     }
+
+    // Networks the user is a member of
+    public function networks()
+    {
+        return $this->belongsToMany('App\Network');
+    }
+
+    // The networks that the user has created
+    public function networks_created()
+    {
+        return $this->belongsTo('App\Network', 'creator_id');
+    }
 }

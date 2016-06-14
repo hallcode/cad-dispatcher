@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Network extends Model
 {
+    use SoftDeletes;
+
     // Grades - grades belonging to this network.
     public function grades()
     {
@@ -17,4 +19,17 @@ class Network extends Model
     {
         return $this->hasMany('App\Incident');
     }
+
+    // Users belonging to the network
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
+
+    // The user that created the network
+    public function creator()
+    {
+        return $this->belongsTo('App\User', 'creator_id');
+    }
+
 }
