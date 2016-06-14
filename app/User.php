@@ -6,6 +6,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -87,5 +89,11 @@ class User extends Authenticatable
     public function uploads()
     {
         return $this->hasMany('App\Upload');
+    }
+
+    // Users avatar image
+    public function avatar()
+    {
+        return $this->belongsTo('App\Upload', 'avatar_id');
     }
 }
