@@ -52,4 +52,10 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Incident', 'creator_id');
     }
+
+    // Locations this user has been at
+    public function locations()
+    {
+        return $this->belongsToMany('App\Location');
+    }
 }

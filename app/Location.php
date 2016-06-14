@@ -11,4 +11,10 @@ class Location extends Model
     {
         return $this->hasMany('App\Incident');
     }
+
+    // Users who have been at this location
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
 }
