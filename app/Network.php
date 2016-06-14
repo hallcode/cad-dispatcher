@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Network extends Model
 {
-    //
+    // Grades - grades belonging to this network.
+    public function grades()
+    {
+        return $this->hasMany('App\Grade');
+    }
 }
