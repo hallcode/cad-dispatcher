@@ -14,6 +14,12 @@ class Network extends Model
         return $this->hasMany('App\Grade');
     }
 
+    // Types allowed in the network
+    public function types()
+    {
+        return $this->hasMany('App\Type');
+    }
+
     // Incidents in the network
     public function incidents()
     {
