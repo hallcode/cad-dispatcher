@@ -82,4 +82,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Update');
     }
+
+    // Uploads this user owns
+    public function uploads()
+    {
+        return $this->hasMany('App\Upload');
+    }
 }
