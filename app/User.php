@@ -27,7 +27,7 @@ class User extends Authenticatable
     // Contact Preferences
     public function prefs()
     {
-        return $this->hasMany('App\ContactPrefs');
+        return $this->hasMany('App\ContactPref');
     }
 
     // Friends List
@@ -39,5 +39,17 @@ class User extends Authenticatable
     public function followers()
     {
         return $this->belongsToMany('App\User', 'friends_list', 'friendee_id', 'friender_id');
+    }
+
+    // Incidents user is assigned to
+    public function incidents()
+    {
+        return $this->belongsToMany('App\Incident');
+    }
+
+    // Indidents the user has created
+    public function incidents_created()
+    {
+        return $this->hasMany('App\Incident', 'creator_id');
     }
 }

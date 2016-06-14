@@ -11,4 +11,10 @@ class Network extends Model
     {
         return $this->hasMany('App\Grade');
     }
+
+    // Incidents in the network
+    public function incidents()
+    {
+        return $this->hasMany('App\Incident');
+    }
 }
