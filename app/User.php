@@ -29,4 +29,15 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\ContactPrefs');
     }
+
+    // Friends List
+    public function following()
+    {
+        return $this->belongsToMany('App\User', 'friends_list', 'friender_id', 'friendee_id');
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany('App\User', 'friends_list', 'friendee_id', 'friender_id');
+    }
 }
