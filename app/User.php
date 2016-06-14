@@ -23,4 +23,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // Contact Preferences
+    public function prefs()
+    {
+        return $this->hasMany('App\ContactPrefs');
+    }
 }
