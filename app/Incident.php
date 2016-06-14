@@ -49,4 +49,10 @@ class Incident extends Model
     {
         return $this->belongsTo('App\Location');
     }
+
+    // Updates to this incident
+    public function updates()
+    {
+        return $this->hasMany('App\Update');
+    }
 }

@@ -76,4 +76,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Status');
     }
+
+    // Updates they have given
+    public function updates()
+    {
+        return $this->belongsToMany('App\Update');
+    }
 }
