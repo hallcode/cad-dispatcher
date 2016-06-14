@@ -70,4 +70,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Network', 'creator_id');
     }
+
+    // The statuses this user has used
+    public function statuses()
+    {
+        return $this->belongsToMany('App\Status');
+    }
 }
