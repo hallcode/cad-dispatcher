@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Update extends Model
 {
+    // Updates incident too
+    protected $touches = ['incident'];
+    
     // Incident this update is for
     public function incident()
     {

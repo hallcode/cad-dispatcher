@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ContactPref extends Model
 {
+    // Cascade updates
+    protected $touches = ['user'];
+    
     // Set the correct table
     protected $table = "contact_prefs";
     
