@@ -56,7 +56,7 @@ Login
     </div>
     <div class="ten wide column">
         <p>
-            If you already have an account, you can login over to the right there. Otherwise click the tab above to make an account.
+            If you already have an account, you can login over to the left there. Otherwise click the tab above to make an account.
         </p>
         <p>
             <b>Dispatcher</b> is a free to use and open source Computer Aided Dispatch (CAD) system. You can use it to manage anything from service / support requests, to pizza deliveries, or just as a glorified to-do list.

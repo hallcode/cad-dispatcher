@@ -90,6 +90,10 @@ New Account
     </div>
     <div class="ten wide column">
         <p>
+            Use the form over on the left to create a new account, then you can start managing incidents right away... how exciting!
+            If you already have an account, you can log in by switching over on the tabs above.
+        </p>
+        <p>
             <b>Dispatcher</b> is a free to use and open source Computer Aided Dispatch (CAD) system. You can use it to manage anything from service / support requests, to pizza deliveries, or just as a glorified to-do list.
         </p>
         <p>
