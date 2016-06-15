@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Network;
+use App\Incident;
+
 class NetworkIncidentController extends Controller
 {
     /**
@@ -45,9 +48,12 @@ class NetworkIncidentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($network_id, $incident_id)
     {
-        //
+        $network = Network::findOrFail($network_id);
+        $incident = Incident::findOrFail($incident_id);
+
+        return $incident->json();
     }
 
     /**
