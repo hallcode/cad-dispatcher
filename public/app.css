@@ -1,0 +1,41 @@
+*, h1, h2, h3, h4, h5, h6, button, input, div, p, a {
+    font-family: 'Open Sans', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+    background-color: #fff;
+}
+
+i {
+    margin: 0em 0.5em;
+}
+
+#headerBar {
+    background-color: #2185d0;
+    border-bottom: 1px solid #19649c;
+    position: relative;
+    width: 100%;
+    padding: 0.4rem 0rem;
+}
+
+#pageBar {
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #d4d4d5;
+    position: relative;
+    width: 100%;
+    padding: 1rem 0rem;
+    margin-bottom: 1rem;
+}
+
+#contentBar {
+    padding: 1rem 0rem;
+}
+
+#footerBar {
+    color: #aaaaaa;
+    font-weight: 300;
+}
+
+.light {
+    font-weight: 400;
+}

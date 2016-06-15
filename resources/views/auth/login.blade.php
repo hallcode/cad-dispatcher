@@ -1,66 +1,69 @@
 @extends('layouts.app')
 
+@section('title')
+<i class="fa fa-user"></i>
+Login
+@endsection
+
+@section('tabs')
+<a href="{{url('/login')}}" class="active item">
+    <i class="fa fa-sign-in"></i> Login
+</a>
+<a href="{{url('/register')}}" class="item">
+    <i class="fa fa-user-plus"></i> Sign Up
+</a>
+@endsection
+
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-                        {{ csrf_field() }}
+<div class="ui stackable divided grid">
+    <div class="six wide column">
+        <form class="ui form" role="form" method="POST" action="{{ url('/login') }}">
+        {{ csrf_field() }}
+        	<div class="field {{ $errors->has('email') ? 'error' : '' }}">
+            	<label>E-Mail Address</label>
+                <input id="email" type="email" name="email" value="{{ old('email') }}">
+                @if ($errors->has('email'))
+                    <div class="ui negative message">
+                        {{ $errors->first('email') }}
+                    </div>
+                @endif
+            </div>
+            
+            <div class="field {{ $errors->has('password') ? 'error' : '' }}">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password">
+                @if ($errors->has('password'))
+                    <div class="ui negative message">
+                        {{ $errors->first('password') }}
+                    </div>
+                @endif
+            </div>
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password">
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember"> Remember Me
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-sign-in"></i> Login
-                                </button>
-
-                                <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
-                            </div>
-                        </div>
-                    </form>
+            <div class="inline field">
+                <div class="ui checkbox">
+                <input type="checkbox" name="remember"> 
+                <label>Remember Me</label>
                 </div>
             </div>
-        </div>
+
+            <div class="field">
+                <button type="submit" class="ui primary button">
+                    <i class="fa fa-btn fa-sign-in"></i> Login
+                </button>
+                <a class="ui basic button" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
+            </div>
+        </form>
+    </div>
+    <div class="ten wide column">
+        <p>
+            If you already have an account, you can login over to the right there. Otherwise click the tab above to make an account.
+        </p>
+        <p>
+            <b>Dispatcher</b> is a free to use and open source Computer Aided Dispatch (CAD) system. You can use it to manage anything from service / support requests, to pizza deliveries, or just as a glorified to-do list.
+        </p>
+        <p>
+            We'll be adding Facebook and other social media login options soon.
+        </p>
     </div>
 </div>
 @endsection

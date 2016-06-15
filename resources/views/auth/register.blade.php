@@ -1,5 +1,19 @@
 @extends('layouts.app')
 
+@section('title')
+<i class="fa fa-user"></i>
+New Account
+@endsection
+
+@section('tabs')
+<a href="{{url('/login')}}" class="item">
+    <i class="fa fa-sign-in"></i> Login
+</a>
+<a href="{{url('/register')}}" class="active item">
+    <i class="fa fa-user-plus"></i> Sign Up
+</a>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">
