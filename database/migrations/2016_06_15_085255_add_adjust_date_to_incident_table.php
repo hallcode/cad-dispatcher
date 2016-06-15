@@ -13,7 +13,7 @@ class AddAdjustDateToIncidentTable extends Migration
     public function up()
     {
         Schema::table('incidents', function (Blueprint $table) {
-            $table->date('date')->nullable()->default(null)->after('dets');
+            $table->timestamp('date')->nullable()->default(null)->after('dets');
         });
     }
 
@@ -25,7 +25,7 @@ class AddAdjustDateToIncidentTable extends Migration
     public function down()
     {
         Schema::table('incidents', function (Blueprint $table) {
-            //
+            $table->dropColumn(['date']);
         });
     }
 }
