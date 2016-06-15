@@ -44,6 +44,11 @@ class User extends Authenticatable
         return $this->belongsToMany('App\User', 'friends_list', 'friendee_id', 'friender_id');
     }
 
+    public function getFriendsAttribute()
+    {
+        return $this->following->merge($this->followers);
+    }
+
     // Incidents user is assigned to
     public function incidents()
     {
