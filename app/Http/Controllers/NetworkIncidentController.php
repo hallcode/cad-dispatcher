@@ -53,7 +53,7 @@ class NetworkIncidentController extends Controller
         $network = Network::findOrFail($network_id);
         $incident = Incident::findOrFail($incident_id);
 
-        return $incident->json();
+        return var_dump($incident->location);
     }
 
     /**
