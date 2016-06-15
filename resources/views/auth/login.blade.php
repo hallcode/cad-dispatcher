@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-<i class="fa fa-user"></i>
+<i class="fa fa-lock"></i>
 Login
 @endsection
 
