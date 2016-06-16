@@ -70,12 +70,18 @@
         <div class="ui divider"></div>
 
         <p style="text-align: center">
+            In the 'Due' column, <span class="ui small blue basic label">blue times</span> show the amount of time until the next update is
+            and <span class="ui small red basic label">red times</span> show how far overdue an incident is (i.e. how
+            long since it should have been updated).
+        </p>
+
+        <p style="text-align: center">
             You can create an incident by going to one of your <a href="{{url('/networks')}}">Networks</a> and adding it there.
         </p>  
 
         <p style="text-align: center">
             This page will automatically update every 20 seconds.
-        </p>  
+        </p>
 
     </div>
 </div>

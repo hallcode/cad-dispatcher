@@ -4,7 +4,7 @@
     <div class="ui secondary inverted menu container">
         @if (Auth::guest() == false)
         <a href="{{url('/home')}}" class="header item">
-            <img src="/images/new-school.jpg">
+            <i class="fa fa-crosshairs"></i>
             Dispatcher
         </a>
         <div class="item">
@@ -15,7 +15,7 @@
         </div>
         @else
         <a href="{{url('/')}}" class="header item">
-            <img src="/images/new-school.jpg">
+            <i class="fa fa-crosshairs"></i>
             Dispatcher
         </a>
         @endif
@@ -85,7 +85,7 @@
 <div id="footerBar" class="ui center aligned container">
     <div class="ui divider"></div>
     <p>
-        <i class="fa fa-creative-commons"></i> Alex Hall {{ date('Y') }}. Source available on <a target="_blank" href="https://github.com/garlics93/cad-dispatcher">Github</a>.
+        <i class="fa fa-creative-commons"></i> Alex Hall {{ date('Y') }}. Source available on <a target="_blank" href="https://github.com/garlics93/cad-dispatcher">Github <i class="fa fa-github"></i></a>.
     </p>
     <p>
         Software and service is provided as-is, the owner takes no responsibility for any loss or damage caused in the course of its use.
