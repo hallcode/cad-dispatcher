@@ -30,5 +30,6 @@ Route::group(['middleware' => 'auth'], function () {
     // Resource Routes
     Route::resource('upload', 'UploadController');
     Route::resource('network', 'NetworkController');
+    Route::resource('incident', 'IncidentController');
 
 });

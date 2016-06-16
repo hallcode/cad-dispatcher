@@ -43,7 +43,7 @@
                         <a href="{{ url('/network/'.$incident->network->id) }}" class="hover-popup ui basic label" data-content="{{ $incident->network->name }}" data-variation="basic" data-position="right center">
                             {{ $incident->network->code }}
                         </a>
-                        <a href="{{ url('/network/'.$incident->network->id.'/incident/'.$incident->id) }}" class="hover-popup ui basic label" data-content="{{ $incident->dets }}" data-variation="basic" data-position="right center">
+                        <a href="{{ url('/incident/'.$incident->id) }}" class="hover-popup ui basic label" data-content="{{ $incident->dets }}" data-variation="basic" data-position="right center">
                             {{ $incident->set_date }} / {{ $incident->ref }}
                         </a>
                     </td>
@@ -61,6 +61,10 @@
 
         <p style="text-align: center">
             You can create an incident by going to one of your <a href="{{url('/networks')}}">Networks</a> and adding it there.
+        </p>  
+
+        <p style="text-align: center">
+            This page will automatically update every 20 seconds.
         </p>  
 
     </div>
