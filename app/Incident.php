@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Incident extends Model
 {
@@ -55,5 +56,63 @@ class Incident extends Model
     public function updates()
     {
         return $this->hasMany('App\Update');
+    }
+
+    // Date function
+    public function getSetDateAttribute($timestamp = null)
+    {
+        if ($this->date == null)
+        {
+            return date('d M Y', strtotime($this->created_at));
+        }
+        else
+        {
+            return date('d M Y', strtotime($this->date));
+        }
+    }
+
+    // Due time
+    public function getDueInAttribute()
+    {
+        if ($this->date == null)
+        {
+            $date = new Carbon($this->updated_at);
+        }
+        else
+        {
+            $date = new Carbon($this->date);;
+        }
+        
+        $diff_mins = Carbon::now()->diffInMinutes($date);
+
+        //  Raw minutes if less than an hour
+        if ($diff_mins < 60)
+        {
+            $total = '00:00:' . $diff_mins;
+        }
+        // Return hours if less than one day 
+        elseif ($diff_mins < 1440)
+        {
+            $hrs = $diff_mins / 60;
+            $mins = fmod($diff_mins, 60);
+            $total = '00:' . sprintf("%02d", number_format($hrs, 0)) . ':' . sprintf("%02d", number_format($mins, 0));
+        }
+        // If more than one day return days and hours
+        elseif ($diff_mins >= 1440)
+        {
+            $days = $diff_mins / 1440;
+            $mins_r = fmod($diff_mins, 1440);
+            $hrs = $mins_r / 60;
+            $mins = fmod($mins_r, 60);
+            $total = sprintf("%02d", number_format($days, 0)) . ':' . sprintf("%02d", number_format($hrs, 0)) . ':' . sprintf("%02d", number_format($mins, 0));
+        }
+
+        $prefix = '';
+        if ($date->isPast())
+        {
+            $prefix = ' - ';
+        }
+
+        return $total . $prefix;
     }
 }

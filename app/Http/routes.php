@@ -11,8 +11,6 @@
 |
 */
 
-Route::singularResourceParameters();
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,14 +24,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Home
     Route::get('/home', 'HomeController@index');
+    Route::get('/incidents', 'HomeController@index');
+    Route::get('/networks', 'HomeController@networks');
 
     // Resource Routes
     Route::resource('upload', 'UploadController');
     Route::resource('network', 'NetworkController');
-    Route::resource('network.incident', 'NetworkIncidentController');
-    Route::resource('network.incident.update', 'NetworkIncidentUpdateController');
-    Route::resource('network.grade', 'NetworkGradeController');
-    Route::resource('network.type', 'NetworkTypeController');
-    Route::resource('network.user', 'NetworkUserController');
 
 });
