@@ -82,7 +82,9 @@ class Incident extends Model
         {
             $date = new Carbon($this->date);;
         }
-        
+
+        $date = $date->addMinutes($this->grade->response_time);
+
         $diff_mins = Carbon::now()->diffInMinutes($date);
 
         //  Raw minutes if less than an hour
@@ -114,5 +116,19 @@ class Incident extends Model
         }
 
         return $total . $prefix;
+    }
+
+    public function getIsOverdueAttribute()
+    {
+        if ($this->date == null)
+        {
+            $date = new Carbon($this->updated_at);
+        }
+        else
+        {
+            $date = new Carbon($this->date);;
+        }
+
+        return $date->addMinutes($this->grade->response_time)->isPast();
     }
 }

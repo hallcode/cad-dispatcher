@@ -33,7 +33,7 @@
                     <th>Type</th>
                     <th>Grade</th>
                     <th>Location</th>
-                    <th>Due (d:h:m)</th>
+                    <th>Due <small>(D:H:M)</small></th>
                 </tr>
             </thead>
             <tbody>
@@ -50,7 +50,17 @@
                     <td><div class="ui label">{{ $incident->type->name }}</div></td>
                     <td><div class="ui {{$incident->grade->color}} label">{{ $incident->grade->name }}</div></td>
                     <td>{{ $incident->location->formatted_address }}</td>
-                    <td>{{ $incident->due_in }}</td>
+                    <td>
+                    @if ($incident->is_overdue)
+                        <div class="ui red basic label">
+                            {{ $incident->due_in }}
+                        </div>
+                    @else
+                        <div class="ui blue basic label">
+                            {{ $incident->due_in }}
+                        </div>
+                    @endif
+                    </td>
                 </tr>
             @endforeach
             </tbody>
