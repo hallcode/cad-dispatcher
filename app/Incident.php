@@ -131,4 +131,20 @@ class Incident extends Model
 
         return $date->addMinutes($this->grade->response_time)->isPast();
     }
+
+    public function getDueInRawAttribute()
+    {
+        if ($this->date == null)
+        {
+            $date = new Carbon($this->updated_at);
+        }
+        else
+        {
+            $date = new Carbon($this->date);;
+        }
+
+        $date = $date->addMinutes($this->grade->response_time);
+
+        return Carbon::now()->diffInMinutes($date, false);
+    }
 }

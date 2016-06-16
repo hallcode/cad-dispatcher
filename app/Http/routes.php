@@ -27,6 +27,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/incidents', 'HomeController@index');
     Route::get('/networks', 'HomeController@networks');
 
+    // Internal API
+    Route::get('/iapi/incidents', 'HomeController@apiIncidents');
+
     // Resource Routes
     Route::resource('upload', 'UploadController');
     Route::resource('network', 'NetworkController');

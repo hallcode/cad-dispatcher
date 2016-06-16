@@ -11,61 +11,58 @@
 <a href="{{url('/networks')}}" class="item">
     <i class="fa fa-user-plus"></i> Networks
 </a>
+<a href="{{url('/map')}}" class="item">
+    <i class="fa fa-map-o"></i> Map
+</a>
 @endsection
 
 @section('content')
-<div class="ui centered divided grid">
+<div id="incList" class="ui centered divided grid">
     <div class="fourteen wide column">
         <p>
             List of active incidents you are assigned to.
         </p>
 
-        @if (Auth::user()->incidents->count() == 0)
-        <div class="ui message" style="text-align: center">
+        <div class="ui message" style="text-align: center" v-if="list.length == 0">
             You are not assigned to any incidents.
             <div class="divider"></div>
         </div>
-        @else
-        <table class="ui table">
+        <table class="ui table" v-else>
             <thead>
                 <tr>
                     <th><i class="fa fa-hashtag"></i></th>
                     <th>Type</th>
                     <th>Grade</th>
                     <th>Location</th>
+                    <th>Updates</th>
                     <th>Due <small>(D:H:M)</small></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach (Auth::user()->incidents as $incident)
-                <tr>
+                <tr v-for="i in list | orderBy 'due_in_raw'" track-by="id">
                     <td>
-                        <a href="{{ url('/network/'.$incident->network->id) }}" class="hover-popup ui basic label" data-content="{{ $incident->network->name }}" data-variation="basic" data-position="right center">
-                            {{ $incident->network->code }}
+                        <a href="@{{ i.network_link }}" class="hover-popup ui basic label" data-content="@{{ i.network_name }}" data-variation="basic" data-position="right center">
+                            @{{ i.network_code }}
                         </a>
-                        <a href="{{ url('/incident/'.$incident->id) }}" class="hover-popup ui basic label" data-content="{{ $incident->dets }}" data-variation="basic" data-position="right center">
-                            {{ $incident->set_date }} / {{ $incident->ref }}
+                        <a href="@{{ i.link }}" class="hover-popup ui basic label" data-content="@{{ i.dets }}" data-variation="basic" data-position="right center">
+                            @{{ i.ref }}
                         </a>
                     </td>
-                    <td><div class="ui label">{{ $incident->type->name }}</div></td>
-                    <td><div class="ui {{$incident->grade->color}} label">{{ $incident->grade->name }}</div></td>
-                    <td>{{ $incident->location->formatted_address }}</td>
+                    <td><div class="ui label">@{{ i.type }}</div></td>
+                    <td><div class="ui @{{ i.grade_color }} label">@{{ i.grade_name }}</div></td>
+                    <td>@{{ i.location }}</td>
+                    <td>@{{ i.updates }}</td>
                     <td>
-                    @if ($incident->is_overdue)
-                        <div class="ui red basic label">
-                            {{ $incident->due_in }}
+                        <div class="ui red basic label" v-if="i.is_overdue">
+                            @{{ i.due_in }}
                         </div>
-                    @else
-                        <div class="ui blue basic label">
-                            {{ $incident->due_in }}
+                        <div class="ui blue basic label" v-else>
+                            @{{ i.due_in }}
                         </div>
-                    @endif
                     </td>
                 </tr>
-            @endforeach
             </tbody>
         </table>
-        @endif
 
         <div class="ui divider"></div>
 
@@ -85,4 +82,25 @@
 
     </div>
 </div>
+
+<script>
+        var app = new Vue({
+            el: '#incList',
+            data: {
+                list: []
+            },
+            ready: function() {
+                this.update();
+            },
+            methods: {
+                update: function() {
+                    $.get('{{url('/iapi/incidents')}}').done(function(data){
+                        app.list = $.parseJSON(data);
+                    });
+                    setTimeout(init_semantic, 500);
+                    setTimeout(this.update, 20000);
+                }
+            }
+        })
+    </script>
 @endsection
