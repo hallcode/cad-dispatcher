@@ -70,8 +70,19 @@ class NetworkIncidentController extends Controller
         {
             if (($incident->location->lat != $update->location->lat && $incident->location->lng != $update->location->lng) && $update->location_id != null)
             {
-                $map->informationWindow($update->location->lat, $update->location->lng, 'Update: ',
+                $map->informationWindow($update->location->lat, $update->location->lng, 'Update',
                     ['markers' => ['icon' => '/cad/public/markers/update.png']]
+                );
+            }
+        }
+
+        // User Markers
+        foreach ($incident->users as $user)
+        {
+            if ($incident->location->lat != $user->locations->last()->lat && $incident->location->lng != $user->locations->last()->lng)
+            {
+                $map->informationWindow($user->locations->last()->lat, $user->locations->last()->lng, $user->label,
+                    ['markers' => ['icon' => '/cad/public/markers/user_dealing.png']]
                 );
             }
         }

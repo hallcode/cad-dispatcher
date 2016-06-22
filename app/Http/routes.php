@@ -33,8 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Resource Routes
     Route::resource('file', 'UploadController');
-    //Route::resource('n', 'NetworkController');
-    //Route::resource('i', 'IncidentController');
+    Route::resource('n', 'NetworkController');
 
     // Incident routes
     Route::get('/n/{network}/i/{date}:{ref}', 'NetworkIncidentController@show')->name('incident.show');
@@ -43,6 +42,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/n/{network}/i/{date}:{ref}/edit', 'NetworkIncidentController@edit')->name('incident.edit');
     Route::post('/n/{network}/i/new', 'NetworkIncidentController@store')->name('incident.store');
     Route::post('/n/{network}/i/{date}:{ref}/edit', 'NetworkIncidentController@update')->name('incident.update');
+
+    Route::get('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@update')->name('incident.addUpdate');
+    Route::post('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@update')->name('incident.storeUpdate');
 
     // Network Routes
     Route::get('/n/{network}', 'NetworkController@show')->name('network.show');
