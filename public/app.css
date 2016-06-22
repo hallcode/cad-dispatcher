@@ -40,3 +40,11 @@ i {
 .light {
     font-weight: 400;
 }
+
+.ui.attribute.table tr td:first-child {
+    font-weight: 600;
+}
+
+.ui.attribute.table td {
+    vertical-align: top;
+}

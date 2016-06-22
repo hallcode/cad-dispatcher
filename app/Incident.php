@@ -59,7 +59,7 @@ class Incident extends Model
     }
 
     // Date function
-    public function getSetDateAttribute($timestamp = null)
+    public function getSetDateAttribute()
     {
         if ($this->date == null)
         {
@@ -68,6 +68,19 @@ class Incident extends Model
         else
         {
             return date('d M Y', strtotime($this->date));
+        }
+    }
+
+    // Date Timestamp function
+    public function getSetTimestampAttribute()
+    {
+        if ($this->date == null)
+        {
+            return $this->created_at;
+        }
+        else
+        {
+            return $this->date;
         }
     }
 

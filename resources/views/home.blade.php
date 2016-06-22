@@ -5,13 +5,13 @@
 @endsection
 
 @section('tabs')
-<a href="{{url('/incidents')}}" class="active item">
+<a href="{{ route('me.incidents') }}" class="active item">
     <i class="fa fa-sign-in"></i> Incidents
 </a>
-<a href="{{url('/networks')}}" class="item">
+<a href="{{ route('me.networks') }}" class="item">
     <i class="fa fa-user-plus"></i> Networks
 </a>
-<a href="{{url('/map')}}" class="item">
+<a href="{{ route('me.map') }}" class="item">
     <i class="fa fa-map-o"></i> Map
 </a>
 @endsection

@@ -64,6 +64,7 @@
     <div class="ui container stackable grid">
         <div class="eight wide column">
             <h3 class="light">@yield('title')</h3>
+            @yield('header_content')
         </div>
         <div class="eight wide right aligned column">
             <h2>
