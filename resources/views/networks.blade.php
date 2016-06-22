@@ -6,16 +6,17 @@
 
 @section('buttons')
 <a class="ui secondary button"><i class="fa fa-plus"></i> Create Network</a>
+<a class="ui secondary button"><i class="fa fa-sign-in"></i> Join Network</a>
 @endsection
 
 @section('tabs')
-<a href="{{url('/incidents')}}" class="item">
+<a href="{{ route('me.incidents') }}" class="item">
     <i class="fa fa-sign-in"></i> Incidents
 </a>
-<a href="{{url('/networks')}}" class="active item">
+<a href="{{ route('me.networks') }}" class="active item">
     <i class="fa fa-user-plus"></i> Networks
 </a>
-<a href="{{url('/map')}}" class="item">
+<a href="{{ route('me.map') }}" class="item">
     <i class="fa fa-map-o"></i> Map
 </a>
 @endsection
@@ -46,8 +47,8 @@
             @foreach (Auth::user()->networks as $network)
                 <tr>
                     <td>
-                        <a href="{{ url('/network/'.$network->id) }}" class="ui basic {{ $network->color }} label">{{ $network->name }}</a>
-                        <a href="{{ url('/network/'.$network->id) }}" class="ui basic label">
+                        <a href="{{ route('network.show', ['network'=>$network->code]) }}" class="ui basic {{ $network->color }} label">{{ $network->name }}</a>
+                        <a href="{{ route('network.show', ['network'=>$network->code]) }}" class="ui basic label">
                             {{ $network->code }}
                         </a>
                         @if ($network->public == false)

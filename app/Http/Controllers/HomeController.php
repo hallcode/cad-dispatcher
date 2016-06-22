@@ -46,11 +46,11 @@ class HomeController extends Controller
         {
             $array[] = [
                 "id" => $incident->id,
-                "link" => url('/incident/'.$incident->id),
+                "link" => route('incident.show', ['network' => $incident->network->code, 'date' => camel_case($incident->set_date), 'ref' => $incident->ref]),
                 "network_id" => $incident->network->id,
                 "network_code" => $incident->network->code,
                 "network_name" => $incident->network->name,
-                "network_link" => url('/network/'.$incident->network->id),
+                "network_link" => route('network.show', ['network' => $incident->network->code]),
                 "ref" => $incident->set_date . ' / ' . $incident->ref,
                 "type" => $incident->type->name,
                 "dets" => $incident->dets,

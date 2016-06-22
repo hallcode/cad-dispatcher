@@ -102,4 +102,23 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Upload', 'avatar_id');
     }
+
+    // Render label (Semantic UI framework)
+    public function getLabelAttribute()
+    {
+        $status = $this->statuses->last();
+        
+        $label = '<a class="ui grey label">';
+        $label .= '<i class="inverted '.$status->color.' circle icon popup" data-position="top center" data-content="'.$status->name.'" data-variation="inverted small"></i>';
+        $label .= e($this->first_name) . ' ' . e($this->last_name);
+        $label .= '<div class="detail">' . $this->serial . '</div>';
+        $label .= '</a>';
+
+        return $label;
+    }
+
+    public function getSerialAttribute()
+    {
+        return $this->ref . ' ' . $this->networks->first()->code;
+    }
 }
