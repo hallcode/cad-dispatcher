@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Network;
 use App\Incident;
 use Carbon\Carbon;
+use Mapper;
 
 class NetworkIncidentController extends Controller
 {
@@ -56,9 +57,26 @@ class NetworkIncidentController extends Controller
         // Get Incident
         $incident = Incident::withTrashed()->get()->filter(function ($value, $key) use ($incident_date) {
             return $value->set_date == date('d M Y', strtotime($incident_date));
-        })->where('ref', $incident_ref)->where('network_id', $network->id);
+        })->where('ref', $incident_ref)->where('network_id', $network->id)->first();
 
-        return view('incident.show', ['network' => $network, 'incident' => $incident->first()]);
+        // Generate Map
+        $map = Mapper::map($incident->location->lat, $incident->location->lng);
+        $map->informationWindow($incident->location->lat, $incident->location->lng, 'Incident: ' . $incident->set_date .' / ' . $incident->ref,
+            ['markers' => ['icon' => '/cad/public/markers/incident.png']]
+        );
+
+        // Update Markers
+        foreach ($incident->updates as $update)
+        {
+            if (($incident->location->lat != $update->location->lat && $incident->location->lng != $update->location->lng) && $update->location_id != null)
+            {
+                $map->informationWindow($update->location->lat, $update->location->lng, 'Update: ',
+                    ['markers' => ['icon' => '/cad/public/markers/update.png']]
+                );
+            }
+        }
+
+        return view('incident.show', ['network' => $network, 'incident' => $incident, 'map' => $map]);
     }
 
     /**

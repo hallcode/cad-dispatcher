@@ -111,6 +111,9 @@
 
     </div>
     <div class="seven wide column">
+    <div style="height: 400px">
+    {!! $map->render() !!}
+    </div>
     <!--
         <h4>Uploads (0)</h4>
         <div class="ui four doubling cards">

@@ -61,7 +61,7 @@ return array(
     | Googlmapper displayed map.
     |
     */
-    'marker' => true,
+    'marker' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ return array(
     | The default zoom level Googlmapper should use.
     |
     */
-    'zoom' => 8,
+    'zoom' => 13,
 
     /*
     |--------------------------------------------------------------------------
@@ -112,7 +112,7 @@ return array(
     | Should the default Googlmapper displayed map UI be shown.
     |
     */
-    'ui' => true,
+    'ui' => false,
 
     /*
     |--------------------------------------------------------------------------
