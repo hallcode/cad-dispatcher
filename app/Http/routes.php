@@ -37,7 +37,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Incident routes
     Route::get('/n/{network}/i/{date}:{ref}', 'NetworkIncidentController@show')->name('incident.show');
-    Route::get('/n/{network}/i/all', 'NetworkIncidentController@index')->name('incident.index');
+    Route::get('/n/{network}/i', 'NetworkIncidentController@index')->name('incident.index');
     Route::get('/n/{network}/i/new', 'NetworkIncidentController@create')->name('incident.create');
     Route::get('/n/{network}/i/{date}:{ref}/edit', 'NetworkIncidentController@edit')->name('incident.edit');
     Route::post('/n/{network}/i/new', 'NetworkIncidentController@store')->name('incident.store');
