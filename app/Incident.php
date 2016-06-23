@@ -160,4 +160,9 @@ class Incident extends Model
 
         return Carbon::now()->diffInMinutes($date, false);
     }
+
+    public function getUrlDateAttribute()
+    {
+        return camel_case($this->set_date);
+    }
 }
