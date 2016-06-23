@@ -9,17 +9,13 @@
 @endsection
 
 @section('buttons')
-<a class="ui secondary button" href="#">
+<a class="ui secondary button" href="{{ route('incident.edit', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
     <i class="fa fa-pencil"></i>
     Edit
 </a>
-<a class="ui secondary button" href="#">
+<a class="ui secondary button" href="{{ route('incident.addUpdate', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
     <i class="fa fa-plus"></i>
     Update
-</a>
-<a class="ui secondary button" href="#">
-    <i class="fa fa-users"></i>
-    Assign Users
 </a>
 @endsection
 

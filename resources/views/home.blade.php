@@ -11,9 +11,6 @@
 <a href="{{ route('me.networks') }}" class="item">
     <i class="fa fa-user-plus"></i> Networks
 </a>
-<a href="{{ route('me.map') }}" class="item">
-    <i class="fa fa-map-o"></i> Map
-</a>
 @endsection
 
 @section('content')
