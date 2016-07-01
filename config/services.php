@@ -15,8 +15,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+        'domain' => 'auto.thewiki.org.uk',
+        'secret' => 'key-61dbad69ecc5b0e6dbb7bc8a20354eca',
     ],
 
     'mandrill' => [
