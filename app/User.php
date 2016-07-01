@@ -2,6 +2,10 @@
 
 namespace App;
 
+use \ClickSendLib\Controllers\SMSController as SMS;
+use Carbon\Carbon;
+use Mail;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -120,5 +124,52 @@ class User extends Authenticatable
     public function getSerialAttribute()
     {
         return $this->ref . ' ' . $this->networks->first()->code;
+    }
+
+    // Clicksend SMS Function
+    public function sendSMS($message, $network)
+    {
+        if ($network->sms_limit != 0)
+        {
+            $messages = [
+                [
+                    "source" => "php",
+                    "from" => substr($network->code, 0, 10),
+                    "body" => substr($message, 0, 159),
+                    "to" => $this->sms,
+                    "custom_string" => "Message: " . Carbon::now()->toDateTimeString()
+                ],
+            ];
+
+            $sms_con = new SMS();
+            $result = $sms_con->sendSms(['messages' => $messages]);
+
+            $network->sms_limit = $network->sms_limit - 1;
+            $network->save();
+
+            return $result;
+        }
+        else{
+            return [
+                "status" => "fail",
+                "error" => "network limit exceeded"
+            ];
+        }
+    }
+
+    // Send Email
+    public function sendEmail($subject, $headline, $body, $priority = 3)
+    {
+        $data = [
+            "subject" => $subject,
+            "headline" => $headline,
+            "body" => $body,
+        ];
+        
+        Mail::send('email.default', $data, function ($message) use ($subject, $priority) {
+            $message->subject($subject);
+            $message->to($this->email, $this->first_name . ' ' . $this->last_name);
+            $message->priority($priority);
+        });   
     }
 }
