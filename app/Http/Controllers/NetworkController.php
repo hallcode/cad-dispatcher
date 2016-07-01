@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Network;
+use App\User;
+
 class NetworkController extends Controller
 {
     /**
@@ -84,5 +87,28 @@ class NetworkController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function SMS($network_id)
+    {
+        // $alex = User::find(1);
+        // $network = Network::find($network_id);
+
+        // $incident = $alex->incidents->last();
+
+        // return var_dump($alex->sendSMS($incident->set_date . '/' . $incident->ref . ' - ' . $incident->grade->name . ' ' . $incident->type->name . ' - ' . str_limit($incident->dets, 75) . ' Location: ' . $incident->location->formatted_address, $network));
+
+    }
+
+    public function email()
+    {
+        // $alex = User::find(1);
+        // $incident = $alex->incidents->last();
+
+        // $message = 'The details of the incident are: ';
+        // $message .= $incident->dets;
+        // $message .= ' Location: ' . $incident->location->formatted_address;
+
+        // $alex->sendEmail('New Incident: ' . $incident->set_date . ' / ' . $incident->ref, 'You have been assigned to a new incident', $message, 1);
     }
 }
