@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "clicksend/clicksend-php": "4.0.3",
         "doctrine/dbal": "2.5.4",
-        "cornford/googlmapper": "2.*"
+        "cornford/googlmapper": "2.*",
+        "guzzlehttp/guzzle": "~5.3|~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
