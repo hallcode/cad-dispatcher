@@ -35,17 +35,34 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('file', 'UploadController');
     Route::resource('n', 'NetworkController');
 
-    // Incident routes
+    // ****** Incident routes ******
+    // Show single incident
     Route::get('/n/{network}/i/{date}:{ref}', 'NetworkIncidentController@show')->name('incident.show');
+
+    // Show all incidents in a network
     Route::get('/n/{network}/i', 'NetworkIncidentController@index')->name('incident.index');
+
+    // Create an incident in a network
     Route::get('/n/{network}/i/new', 'NetworkIncidentController@create')->name('incident.create');
+
+    // Edit an incident
     Route::get('/n/{network}/i/{date}:{ref}/edit', 'NetworkIncidentController@edit')->name('incident.edit');
+
+    // Store a new incident in the databse
     Route::post('/n/{network}/i/new', 'NetworkIncidentController@store')->name('incident.store');
+
+    // Store an edit in the databse
     Route::post('/n/{network}/i/{date}:{ref}/edit', 'NetworkIncidentController@update')->name('incident.update');
 
+    // ****** Update Routes ******
+    // Show the form to create an update
     Route::get('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@update')->name('incident.addUpdate');
+    // Save an update to the database
     Route::post('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@update')->name('incident.storeUpdate');
 
     // Network Routes
     Route::get('/n/{network}', 'NetworkController@show')->name('network.show');
+
+    // Test Routes
+    Route::get('/email', 'NetworkController@email');
 });
