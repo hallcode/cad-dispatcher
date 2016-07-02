@@ -26,14 +26,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index');
     Route::get('/me/incidents', 'HomeController@index')->name('me.incidents');
     Route::get('/me/networks', 'HomeController@networks')->name('me.networks');
-    Route::get('/me/map', 'HomeController@map')->name('me.map');
 
     // Internal API
     Route::get('/iapi/incidents', 'HomeController@apiIncidents');
 
+    // User Profile
+    Route::get('/me', 'UserController@showCurrentUserProfile')->name('me');
+
     // Resource Routes
     Route::resource('file', 'UploadController');
     Route::resource('n', 'NetworkController');
+    Route::resource('u', 'UserController');
 
     // ****** Incident routes ******
     // Show single incident

@@ -24,37 +24,9 @@
             <a href="{{ url('/login') }}" class="ui item">Log In</a>
             <a href="{{ url('/register') }}" class="ui item">Sign Up</a>
             @else
-            <div class="ui dropdown link item">
-                <span class="text">Networks</span>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    @if (Auth::user()->networks->count() == 0)
-                        <div class="header">No Networks</div>
-                    @else
-                        @foreach (Auth::user()->networks as $network)
-                            <a class="item" href="{{ url('/network/' . $network->id) }}">
-                                {{ $network->name }}
-                            </a>
-                        @endforeach
-                    @endif
-                </div>
-            </div>
-            <div class="ui dropdown link item">
-                <span class="text">{{ ucwords(Auth::user()->first_name) }} {{ ucwords(Auth::user()->last_name) }} {{ Auth::user()->ref }}</span>
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <a class="item" href="#">
-                        <i class="fa fa-gear fa-fw"></i> User Settings
-                    </a>
-                    <a class="item" href="#">
-                        <i class="fa fa-bell-o fa-fw"></i> Notification Settings
-                    </a>
-                    <div class="divider"></div>
-                    <a class="item" href="{{ url('/logout') }}">
-                        <i class="fa fa-sign-out fa-fw"></i> Log out
-                    </a>
-                </div>
-            </div>
+            <a href="{{ route('me') }}" class="ui item">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }} {{ Auth::user()->serial }}</a>
+            <a href="{{ route('me.networks') }}" class="ui item">My Networks</a>
+            <a href="{{ url('/logout') }}" class="ui item">Log Out</a>
             @endif
         </div>
     </div>
@@ -71,9 +43,7 @@
                 @yield('buttons')
             </h2>
         </div>
-        <div class="ui tabular menu" style="border-bottom: none; margin-top: 0;">
             @yield('tabs')
-        </div>
     </div>
 </div>
 

@@ -134,8 +134,8 @@ class User extends Authenticatable
             $messages = [
                 [
                     "source" => "php",
-                    "from" => substr($network->code, 0, 10),
-                    "body" => substr($message, 0, 159),
+                    "from" => str_limit($network->name, 0, 11),
+                    "body" => str_limit($message, 157),
                     "to" => $this->sms,
                     "custom_string" => "Message: " . Carbon::now()->toDateTimeString()
                 ],

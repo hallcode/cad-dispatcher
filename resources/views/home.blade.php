@@ -1,21 +1,23 @@
-@extends('layouts.app')
+@extends('layouts.sidebar')
 
 @section('title')
 <i class="fa fa-home"></i> <small>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</small> / My Stuff
 @endsection
 
 @section('tabs')
-<a href="{{ route('me.incidents') }}" class="active item">
-    <i class="fa fa-sign-in"></i> Incidents
-</a>
-<a href="{{ route('me.networks') }}" class="item">
-    <i class="fa fa-user-plus"></i> Networks
-</a>
+<div class="ui tabular menu" style="border-bottom: none; margin-top: 0;">
+    <a href="{{ route('me.incidents') }}" class="active item">
+        <i class="fa fa-flag"></i> Incidents
+    </a>
+    <a href="{{ route('me.networks') }}" class="item">
+        <i class="fa fa-users"></i> Networks
+    </a>
+</div>
 @endsection
 
-@section('content')
+@section('page-content')
 <div id="incList" class="ui centered divided grid">
-    <div class="fourteen wide column">
+    <div class="sixteen wide column">
         <p>
             List of active incidents you are assigned to.
         </p>
@@ -28,8 +30,8 @@
             <thead>
                 <tr>
                     <th><i class="fa fa-hashtag"></i></th>
-                    <th>Type</th>
                     <th>Grade</th>
+                    <th>Type</th>
                     <th>Location</th>
                     <th>Updates</th>
                     <th>Due <small>(D:H:M)</small></th>
@@ -38,15 +40,12 @@
             <tbody>
                 <tr v-for="i in list | orderBy 'due_in_raw'" track-by="id">
                     <td>
-                        <a href="@{{ i.network_link }}" class="hover-popup ui basic label" data-content="@{{ i.network_name }}" data-variation="basic" data-position="right center">
-                            @{{ i.network_code }}
-                        </a>
-                        <a href="@{{ i.link }}" class="hover-popup ui basic label" data-content="@{{ i.dets }}" data-variation="basic" data-position="right center">
+                        <a href="@{{ i.link }}" class="hover-popup ui" data-content="@{{ i.dets }}" data-variation="basic" data-position="right center">
                             @{{ i.ref }}
                         </a>
                     </td>
-                    <td><div class="ui label">@{{ i.type }}</div></td>
                     <td><div class="ui @{{ i.grade_color }} label">@{{ i.grade_name }}</div></td>
+                    <td><div class="ui label">@{{ i.type }}</div></td>
                     <td>@{{ i.location }}</td>
                     <td>@{{ i.updates }}</td>
                     <td>

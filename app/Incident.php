@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Network;
 use Carbon\Carbon;
 
 class Incident extends Model
@@ -173,6 +174,11 @@ class Incident extends Model
         $incident = Incident::withTrashed()->get()->filter(function ($value, $key) use ($incident_date) {
             return $value->set_date == date('d M Y', strtotime($incident_date));
         })->where('ref', $incident_ref)->where('network_id', $network->id)->first();
+
+        if ($incident == null)
+        {
+            return abort('404');
+        }
 
         return $incident;
     }

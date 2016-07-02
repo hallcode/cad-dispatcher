@@ -1,26 +1,23 @@
-@extends('layouts.app')
+@extends('layouts.sidebar')
 
 @section('title')
 <i class="fa fa-home"></i> <small>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</small> / My Stuff
 @endsection
 
-@section('buttons')
-<a class="ui secondary button"><i class="fa fa-plus"></i> Create Network</a>
-<a class="ui secondary button"><i class="fa fa-sign-in"></i> Join Network</a>
-@endsection
-
 @section('tabs')
-<a href="{{ route('me.incidents') }}" class="item">
-    <i class="fa fa-sign-in"></i> Incidents
-</a>
-<a href="{{ route('me.networks') }}" class="active item">
-    <i class="fa fa-user-plus"></i> Networks
-</a>
+<div class="ui tabular menu" style="border-bottom: none; margin-top: 0;">
+    <a href="{{ route('me.incidents') }}" class="item">
+        <i class="fa fa-flag"></i> Incidents
+    </a>
+    <a href="{{ route('me.networks') }}" class="active item">
+        <i class="fa fa-users"></i> Networks
+    </a>
+</div>
 @endsection
 
-@section('content')
+@section('page-content')
 <div class="ui centered divided grid">
-    <div class="fourteen wide column">
+    <div class="sixteen wide column">
         <p>
             List of all the networks you are part of.
         </p>
@@ -44,13 +41,11 @@
             @foreach (Auth::user()->networks as $network)
                 <tr>
                     <td>
-                        <a href="{{ route('network.show', ['network'=>$network->code]) }}" class="ui basic {{ $network->color }} label">{{ $network->name }}</a>
-                        <a href="{{ route('network.show', ['network'=>$network->code]) }}" class="ui basic label">
-                            {{ $network->code }}
-                        </a>
                         @if ($network->public == false)
                         <i class="fa fa-lock"></i>
                         @endif
+                        <a href="{{ route('network.show', ['network'=>$network->code]) }}">{{ $network->name }}</a> / 
+                        {{ $network->code }}
                     </td>
                     <td>{{ $network->description }}</td>
                     <td>{{ $network->users->count() }}</td>

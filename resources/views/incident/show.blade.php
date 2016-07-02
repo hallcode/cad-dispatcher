@@ -15,17 +15,13 @@
     Edit
 </a>
 <a class="ui secondary button" href="{{ route('incident.addUpdate', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
-    <i class="fa fa-plus"></i>
+    <i class="fa fa-retweet"></i>
     Update
 </a>
 @else
-<a class="ui disabled secondary button" href="{{ route('incident.edit', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
-    <i class="fa fa-pencil"></i>
-    Edit
-</a>
-<a class="ui disabled secondary button" href="{{ route('incident.addUpdate', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
-    <i class="fa fa-plus"></i>
-    Update
+<a class="ui secondary button" href="#">
+    <i class="fa fa-retweet"></i>
+    Re-Open
 </a>
 @endif
 @endsection
