@@ -56,9 +56,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     // ****** Update Routes ******
     // Show the form to create an update
-    Route::get('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@update')->name('incident.addUpdate');
+    Route::get('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@addUpdate')->name('incident.addUpdate');
     // Save an update to the database
-    Route::post('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@update')->name('incident.storeUpdate');
+    Route::post('/n/{network}/i/{date}:{ref}/update', 'NetworkIncidentController@storeUpdate')->name('incident.storeUpdate');
 
     // Network Routes
     Route::get('/n/{network}', 'NetworkController@show')->name('network.show');
