@@ -55,9 +55,7 @@ class NetworkIncidentController extends Controller
         $network = Network::get()->where('code', $network_code)->first();
 
         // Get Incident
-        $incident = Incident::withTrashed()->get()->filter(function ($value, $key) use ($incident_date) {
-            return $value->set_date == date('d M Y', strtotime($incident_date));
-        })->where('ref', $incident_ref)->where('network_id', $network->id)->first();
+        $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
 
         // Generate Map
         $map = Mapper::map($incident->location->lat, $incident->location->lng);
@@ -87,7 +85,12 @@ class NetworkIncidentController extends Controller
             }
         }
 
-        return view('incident.show', ['network' => $network, 'incident' => $incident, 'map' => $map]);
+        return view('incident.show', [
+            'network' => $network,
+            'incident' => $incident,
+            'map' => $map,
+            'page_title' => $incident->set_date . ' / ' . $incident->ref, 
+        ]);
     }
 
     /**
@@ -123,4 +126,42 @@ class NetworkIncidentController extends Controller
     {
         //
     }
+
+    /**
+     * Show the form to create an update
+     *
+     * @param string $network_code
+     * @param string $incident_date
+     * @param int $incident_ref
+     * @return \Illuminate\Http\Response
+     */
+     public function addUpdate($network_code, $incident_date, $incident_ref)
+     {
+        // Get Network
+        $network = Network::get()->where('code', $network_code)->first();
+
+        // Get Incident
+        $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
+        
+        // Return view and pass vars
+        return view('incident.update', [
+            'page_title' => 'Update Incident',
+            'incident' => $incident,
+            'network' => $network,
+        ]);
+     }
+
+     /**
+     * Save a new update to the database
+     *
+     * @param  \Illuminate\Http\Request  $request 
+     * @param string $network_code
+     * @param string $incident_date
+     * @param int $incident_ref
+     * @return \Illuminate\Http\Response
+     */
+     public function storeUpdate(Request $request, $network_code, $incident_date, $incident_ref)
+     {
+         return var_dump($_POST);
+     }
 }
