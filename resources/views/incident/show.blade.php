@@ -9,6 +9,7 @@
 @endsection
 
 @section('buttons')
+@if ($incident->trashed() == false)
 <a class="ui secondary button" href="{{ route('incident.edit', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
     <i class="fa fa-pencil"></i>
     Edit
@@ -17,6 +18,16 @@
     <i class="fa fa-plus"></i>
     Update
 </a>
+@else
+<a class="ui disabled secondary button" href="{{ route('incident.edit', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
+    <i class="fa fa-pencil"></i>
+    Edit
+</a>
+<a class="ui disabled secondary button" href="{{ route('incident.addUpdate', ['network' => $network->code, 'ref' => $incident->ref, 'date' => $incident->url_date]) }}">
+    <i class="fa fa-plus"></i>
+    Update
+</a>
+@endif
 @endsection
 
 @section('tabs')
@@ -59,12 +70,17 @@
                     <td>{{$incident->location->formatted_address}}</td>
                 </tr>
                 <tr>
+                @if ($incident->trashed())
+                    <td>Update Due:</td>
+                    <td>Never, this incident is closed.</td>
+                @else
                     @if ($incident->is_overdue == false)
                         <td>Next Update Due <small>dd:hh:mm</small></td>
                     @else
                         <td>Update Overdue By <small>dd:hh:mm</small></td>
                     @endif
                     <td>{{$incident->due_in}}</td> 
+                @endif
                 </tr>
                 <tr>
                     <td>Users Assigned</td>

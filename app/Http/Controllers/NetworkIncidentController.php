@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Network;
 use App\Incident;
+use App\Location;
+use App\Update;
 use Carbon\Carbon;
 use Mapper;
 
@@ -162,6 +164,54 @@ class NetworkIncidentController extends Controller
      */
      public function storeUpdate(Request $request, $network_code, $incident_date, $incident_ref)
      {
-         return var_dump($_POST);
+         // Step one: validate all the fields.
+         $this->validate($request, [
+             'users' => 'required',
+             'dets' => 'required',
+             'localSearch' => 'required',
+             'location' => 'present',
+         ]);
+
+         // Get network
+         $network = Network::get()->where('code', $network_code)->first();
+
+         // Get incident
+         $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
+
+         // Create location in database
+         $location = new Location;
+            $location->formatted_address = $request->formatted_address;
+            $location->type = $request->type;
+            $location->lat = $request->lat;
+            $location->lng = $request->lng;
+            $location->notes = $request->location_note;
+         $location->save();
+
+         // Create new update
+         $update = new Update;
+            $update->incident_id = $incident->id;
+            $update->location_id = $location->id;
+            $update->dets = $request->dets;
+            if ($request->isResult == '1')
+            {
+                $update->result = 1;
+            }
+            else {
+                $update->result = 0;
+            }
+         $update->save();
+
+         // Assign Users to Update
+         $user_ids = explode(',', $request->users);
+         $update->users()->attach($user_ids);
+
+         $update->notifyUsers();
+
+         if ($request->isResult == 1)
+         {
+             $incident->delete();
+         }
+
+         return redirect(route('incident.show', ['network' => $incident->network->code, 'date' => camel_case($incident->set_date), 'ref' => $incident->ref]));
      }
 }
