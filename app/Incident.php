@@ -165,4 +165,55 @@ class Incident extends Model
     {
         return camel_case($this->set_date);
     }
+
+    public static function findFromRef($network_id, $incident_date, $incident_ref)
+    {
+        $network = Network::find($network_id);
+
+        $incident = Incident::withTrashed()->get()->filter(function ($value, $key) use ($incident_date) {
+            return $value->set_date == date('d M Y', strtotime($incident_date));
+        })->where('ref', $incident_ref)->where('network_id', $network->id)->first();
+
+        return $incident;
+    }
+
+    public function notifyUsers()
+    {
+        // Check if the grade of this incident is set to true, and that
+        // NB: The $user->sendSMS function will check the SMS limit on the network before sending any SMSs.
+        if ($this->grade->send_sms == true)
+        {
+            // Send an SMS to each user assigned to the incident.
+            foreach ($this->users as $user)
+            {
+                $network = $this->network;
+
+                $message = strtoupper($this->grade->name) . ': ';
+                $message .= $this->set_date . ' [' . $this->ref . '] ';
+                $message .= str_limit($this->dets, 90);
+                $message .= ' - Location: ';
+                $message .= str_limit($this->location->formatted_address, 40);
+
+                $user->sendSMS($message, $network);
+            }
+        }
+        
+        // Check if the grade is set to send Emails.
+        if ($this->grade->send_email == true)
+        {
+            // Send an email message to each user
+            foreach ($this->users as $user)
+            {
+                $subject = 'New ' . $this->grade->name . ' Incident';
+                $headline = 'You have been assigned to a new ' . $this->grade->name . ' grade incident.';
+
+                $body = $this->set_date . ' [' . $this->ref . '] <br><br>';
+                $body .= $this->dets . '<br><br>';
+                $body .= 'Location: ' . $this->location->formatted_address . '<br><br>';
+                $body .= 'Update required in: (dd:hh:mm)' . $this->due_in;
+
+                $user->sendEmail($subject, $headline, $body);
+            }
+        }
+    }
 }
