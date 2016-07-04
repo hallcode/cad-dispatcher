@@ -54,8 +54,8 @@ class Update extends Model
             // Send an email message to each user
             foreach ($this->incident->users as $user)
             {
-                $subject = 'Update to ' . $this->incident->grade->name . ' Incident';
-                $headline = 'A ' . $this->incident->grade->name . ' grade incident you are assigned to has been updated.';
+                $subject = 'Update to ' . $this->incident->grade->name . ' ' . $this->incident->type->name;
+                $headline = 'A ' . $this->incident->grade->name . ' grade '. $this->incident->type->name .' you are assigned to has been updated.';
 
                 $body = $this->incident->set_date . ' [' . $this->incident->ref . '] <br><br>';
                 $body .= $this->dets . '<br><br>';
@@ -63,7 +63,7 @@ class Update extends Model
 
                 if ($this->result == true)
                 {
-                    $body .= '<b>This incident has now been closed. No further updates are requred.</b>';
+                    $body .= '<b>This '.$this->incident->type->name.' has now been closed. No further updates are requred.</b>';
                 }
                 else
                 {
