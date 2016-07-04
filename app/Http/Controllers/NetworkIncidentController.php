@@ -9,8 +9,11 @@ use App\Network;
 use App\Incident;
 use App\Location;
 use App\Update;
+use App\Type;
+use App\Grade;
 use Carbon\Carbon;
 use Mapper;
+use Auth;
 
 class NetworkIncidentController extends Controller
 {
@@ -29,9 +32,19 @@ class NetworkIncidentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($network_code)
     {
-        //
+        $network = Network::findFromCode($network_code);
+
+        $types = Type::where('default', 1)->get();
+        $default_grades = Grade::where('default', 1)->get();
+
+        return view('incident.create', [
+            'page_title' => 'Create Incident',
+            'network' => $network,
+            'default_types' => $types,
+            'default_grades' => $default_grades,
+        ]);
     }
 
     /**
@@ -40,9 +53,61 @@ class NetworkIncidentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $network_code)
     {
-        //
+        // Get correct network
+        $network = Network::findFromCode($network_code);
+
+        // Validate form
+        $this->validate($request, [
+            'eventType' => 'required',
+            'grade' => 'required',
+            'users' => 'required',
+            'dets' => 'required',
+            'localSearch' => 'required',
+            'location' => 'present',
+        ]);
+
+        // Create Location
+        $location = new Location;
+           $location->formatted_address = $request->formatted_address;
+           $location->type = $request->type;
+           $location->lat = $request->lat;
+           $location->lng = $request->lng;
+           $location->notes = $request->location_note;
+        $location->save();
+
+        // Generate Reference
+        $new_ref = Incident::withTrashed()->get()->filter(function($value, $key) {
+            return $value->set_date == date('d M Y');
+        })->count() + 1;
+
+        // Create Incident
+        $incident = new Incident;
+            $incident->ref = $new_ref;
+            $incident->network_id = $network->id;
+            $incident->type_id = $request->eventType;
+            $incident->grade_id = $request->grade;
+            $incident->creator_id = Auth::user()->id;
+            $incident->location_id = $location->id;
+            $incident->dets = $request->dets;
+            $incident->type_id = $request->eventType;
+            if (isset($request->date) && $request->set_date != '')
+            {
+                $incident->date = date("Y-m-d H:i:s", strtotime($request->date));
+            }
+        $incident->save();
+
+        // Attach users
+        $user_ids = explode(',', $request->users);
+        $incident->users()->attach($user_ids);
+
+        // Notify assigned users
+        $incident->notifyUsers();
+
+        // Return incident
+        return redirect(route('incident.show', ['network' => $incident->network->code, 'date' => camel_case($incident->set_date), 'ref' => $incident->ref]));
+
     }
 
     /**
@@ -54,7 +119,7 @@ class NetworkIncidentController extends Controller
     public function show($network_code, $incident_date, $incident_ref)
     {
         // Get Network
-        $network = Network::get()->where('code', $network_code)->first();
+        $network = Network::findFromCode($network_code);
 
         // Get Incident
         $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
@@ -140,7 +205,7 @@ class NetworkIncidentController extends Controller
      public function addUpdate($network_code, $incident_date, $incident_ref)
      {
         // Get Network
-        $network = Network::get()->where('code', $network_code)->first();
+        $network = Network::findFromCode($network_code);
 
         // Get Incident
         $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
@@ -173,7 +238,7 @@ class NetworkIncidentController extends Controller
          ]);
 
          // Get network
-         $network = Network::get()->where('code', $network_code)->first();
+         $network = Network::findFromCode($network_code);
 
          // Get incident
          $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
