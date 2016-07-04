@@ -2,9 +2,10 @@
 
 
 @section('content')
-<div class="ui container grid">
+<div class="ui stackable container grid">
     <div class="computer only three wide column">
         <div class="ui fluid text vertical menu">
+            @yield('custom-sidebar')
             <div class="header item">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }} {{ Auth::user()->serial }}</div>
             <a class="item" href="{{ route('me') }}">
                 <i class="fa fa-user"></i>
@@ -25,8 +26,9 @@
             </a>
             @foreach (Auth::user()->networks as $network)
                 <a class="item" href="{{ route('n.show', ['n' => $network->code]) }}">
-                {{ $network->name }}
-            </a>
+                    <i class="ui {{ $network->color }} square icon"></i>
+                    {{ $network->name }}
+                </a>
             @endforeach
         </div>
     </div>

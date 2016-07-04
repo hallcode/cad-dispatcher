@@ -24,9 +24,8 @@
 
         <div class="ui message" style="text-align: center" v-if="list.length == 0">
             You are not assigned to any incidents.
-            <div class="divider"></div>
         </div>
-        <table class="ui table" v-else>
+        <table class="ui small table" v-else>
             <thead>
                 <tr>
                     <th><i class="fa fa-hashtag"></i></th>

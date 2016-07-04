@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.sidebar')
 
 @section('title')
 <i class="fa fa-hashtag"></i>
@@ -26,22 +26,9 @@
 @endif
 @endsection
 
-@section('tabs')
-<!--
-<a class="active item" href="{{$incident->link}}">
-    <i class="fa fa-asterisk"></i>
-    Details
-</a>
-<a class="item">
-    <i class="fa fa-map-o"></i>
-    Map
-</a>
--->
-@endsection
-
-@section('content')
-<div class="ui stackable divided grid">
-    <div class="nine wide column">
+@section('page-content')
+<div class="ui stackable grid">
+    <div class="ten wide column">
         <table class="ui basic attribute table">
             <tbody>
                 <tr>
@@ -101,14 +88,24 @@
         @foreach ($incident->updates as $update)
         <div class="ui fluid card">
             <div class="content">
-                <div class="meta">{{ date('d M Y @ H:i', strtotime($update->created_at)) }} from 
-                    <div class="ui horizontal bulleted link list">
-                    @foreach ($update->users as $user)
-                    <div class="item">{{ $user->first_name }} {{ $user->last_name }} {{ $user->serial }}</div>
-                    @endforeach
-                    </div>
+                <div class="meta">
+                    <span class="date">
+                        <i class="fa fa-calendar-o"></i> {{ date('d M Y', strtotime($update->created_at)) }}
+                    </span>
+                    <span class="time">
+                        <i class="fa fa-clock-o"></i> {{ date('H:i', strtotime($update->created_at)) }}
+                    </span>
+                    <span class="users">
+                        <i class="fa fa-users"></i>
+                        @foreach ($update->users as $user)
+                        <span class="item">{{ $user->first_name }} {{ $user->last_name }} {{ $user->serial }}</span>
+                        @endforeach
+                    </span>
+                    @if ($update->result)
+                    <span class="right floated isResult"><i class="fa fa-check"></i> Result</span>
+                    @endif
                 </div>
-                <p>
+                <p style="margin-top: 0.5rem">
                     {{$update->dets}}
                 </p>
                 <div class="description"><i class="fa fa-map-marker"></i>{{ $update->location->formatted_address }}</div>
@@ -118,8 +115,8 @@
         @endif
 
     </div>
-    <div class="seven wide column">
-    <div style="height: 400px">
+    <div class="five wide column">
+    <div style="height: 300px">
     {!! $map->render() !!}
     </div>
     <!--
