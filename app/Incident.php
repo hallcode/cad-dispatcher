@@ -210,13 +210,13 @@ class Incident extends Model
             // Send an email message to each user
             foreach ($this->users as $user)
             {
-                $subject = 'New ' . $this->grade->name . ' Incident';
-                $headline = 'You have been assigned to a new ' . $this->grade->name . ' grade incident.';
+                $subject = 'New ' . $this->grade->name . ' ' . $this->type->name;
+                $headline = 'You have been assigned to a new ' . $this->grade->name . ' grade '. $this->type->name .'.';
 
                 $body = $this->set_date . ' [' . $this->ref . '] <br><br>';
                 $body .= $this->dets . '<br><br>';
                 $body .= 'Location: ' . $this->location->formatted_address . '<br><br>';
-                $body .= 'Update required in: (dd:hh:mm)' . $this->due_in;
+                $body .= 'Update required in: <em>(dd:hh:mm)</em> ' . $this->due_in;
 
                 $user->sendEmail($subject, $headline, $body);
             }
