@@ -8,6 +8,7 @@ use App\Http\Requests;
 
 use App\Network;
 use App\User;
+use Auth;
 
 class NetworkController extends Controller
 {
@@ -18,7 +19,24 @@ class NetworkController extends Controller
      */
     public function index()
     {
-        //
+        $networks = Network::get()->filter(function($value, $key) {
+            if ($value->public == 0)
+            {
+                if ($value->users->contains(Auth::user()->id))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        });
+        return view('network.index', ['page_title' => 'All Networks', 'networks' => $networks]);
     }
 
     /**
@@ -50,9 +68,9 @@ class NetworkController extends Controller
      */
     public function show($code)
     {
-        $network = Network::where('code', $code)->get();
+        $network = Network::findFromCode($code);
 
-        return view('network.show');
+        return view('network.show', ['network' => $network, 'page_title' => $network->name]);
     }
 
     /**
@@ -89,26 +107,4 @@ class NetworkController extends Controller
         //
     }
 
-    public function SMS($network_id)
-    {
-        // $alex = User::find(1);
-        // $network = Network::find($network_id);
-
-        // $incident = $alex->incidents->last();
-
-        // return var_dump($alex->sendSMS($incident->set_date . '/' . $incident->ref . ' - ' . $incident->grade->name . ' ' . $incident->type->name . ' - ' . str_limit($incident->dets, 75) . ' Location: ' . $incident->location->formatted_address, $network));
-
-    }
-
-    public function email()
-    {
-        // $alex = User::find(1);
-        // $incident = $alex->incidents->last();
-
-        // $message = 'The details of the incident are: ';
-        // $message .= $incident->dets;
-        // $message .= ' Location: ' . $incident->location->formatted_address;
-
-        // $alex->sendEmail('New Incident: ' . $incident->set_date . ' / ' . $incident->ref, 'You have been assigned to a new incident', $message, 1);
-    }
 }
