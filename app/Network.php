@@ -9,6 +9,20 @@ class Network extends Model
 {
     use SoftDeletes;
 
+    public static function findFromCode($code)
+    {
+        $networks = Network::where('code', $code)->get();
+
+        if ($networks->count() == 0)
+        {
+            return abort(404);
+        }
+        else
+        {
+            return $networks->first();
+        }
+    }
+
     // Grades - grades belonging to this network.
     public function grades()
     {
