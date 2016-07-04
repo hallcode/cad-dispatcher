@@ -33,6 +33,10 @@ Route::group(['middleware' => 'auth'], function () {
     // User Profile
     Route::get('/me', 'UserController@showCurrentUserProfile')->name('me');
 
+    // Join a network
+    Route::get('/n/{n}/join', 'NetworkController@joinCheck')->name('n.joinCheck');
+    Route::post('/n/{n}/join', 'NetworkController@join')->name('n.join');
+
     // Resource Routes
     Route::resource('file', 'UploadController');
     Route::resource('n', 'NetworkController');
@@ -41,9 +45,6 @@ Route::group(['middleware' => 'auth'], function () {
     // ****** Incident routes ******
     // Show single incident
     Route::get('/n/{network}/i/{date}:{ref}', 'NetworkIncidentController@show')->name('incident.show');
-
-    // Show all incidents in a network
-    Route::get('/n/{network}/i', 'NetworkIncidentController@index')->name('incident.index');
 
     // Create an incident in a network
     Route::get('/n/{network}/i/new', 'NetworkIncidentController@create')->name('incident.create');
@@ -68,4 +69,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Test Routes
     Route::get('/email', 'NetworkController@email');
+
+    // ****** Internal API ******
+    // Network Incident List
+    Route::get('/iapi/network/{code}/incidents', 'IntApiController@networkIncidentList')->name('iapi.networkIncidentList');
+    Route::get('/iapi/network/{code}/users', 'IntApiController@networkUserList')->name('iapi.networkUserList');
 });
