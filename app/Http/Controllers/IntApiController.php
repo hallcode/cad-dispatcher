@@ -30,7 +30,7 @@ class IntApiController extends Controller
                 "network_link" => route('network.show', ['network' => $incident->network->code]),
                 "ref" => $incident->set_date . ' / ' . $incident->ref,
                 "type" => $incident->type->name,
-                "dets" => $incident->dets,
+                "dets" => str_limit($incident->dets, 150),
                 "updates" => $incident->updates->count(),
                 "grade_name" => $incident->grade->name,
                 "grade_color" => $incident->grade->color,
@@ -45,7 +45,7 @@ class IntApiController extends Controller
         return json_encode($array);
     }
 
-    // Return JSON list of incidents in a network
+    // Return JSON list of users in a network
     public function networkUserList($network_code)
     {
         $network = Network::where('code', $network_code)->first();

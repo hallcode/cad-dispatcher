@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Network;
+use App\Location;
 use Carbon\Carbon;
 
 class Incident extends Model
@@ -216,10 +217,43 @@ class Incident extends Model
                 $body = $this->set_date . ' [' . $this->ref . '] <br><br>';
                 $body .= $this->dets . '<br><br>';
                 $body .= 'Location: ' . $this->location->formatted_address . '<br><br>';
-                $body .= 'Update required in: <em>(dd:hh:mm)</em> ' . $this->due_in;
+                $body .= 'Update required in: <em>(dd:hh:mm) </em> ' . $this->due_in;
 
                 $user->sendEmail($subject, $headline, $body);
             }
+        }
+    }
+
+    public function setLocation($formatted_address, $type, $lat, $lng, $note = null)
+    {
+        $locations = Location::get()
+            ->where('formatted_address', $formatted_address)
+            ->where('lat', $lat)
+            ->where('lng', $lng);
+        
+        if ($locations->count() == 0)
+        {
+            // Create new location
+            $loc = new Location;
+                $loc->formatted_address = $formatted_address;
+                $loc->type = $type;
+                $loc->lat = $lat;
+                $loc->lng = $lng;
+                if (!empty($note))
+                {
+                    $loc->notes = $note;
+                }
+            $loc->save();
+
+            // Attach user to new location
+            $this->location_id = $loc->id;
+            $this->save();
+        }
+        else
+        {
+            // Assosiate with existing one
+            $this->location_id = $locations->last()->id;
+            $this->save();
         }
     }
 }

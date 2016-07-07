@@ -7,9 +7,13 @@
         <div class="ui fluid text vertical menu">
             @yield('custom-sidebar')
             <div class="header item">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }} {{ Auth::user()->serial }}</div>
-            <a class="item" href="{{ route('me') }}">
+            <!-- <a class="item" href="{{ route('me') }}">
                 <i class="fa fa-user"></i>
                 Profile
+            </a> -->
+            <a class="item" href="{{ route('me.update') }}">
+                <i class="fa fa-retweet"></i>
+                Update
             </a>
             <a class="item" href="{{ route('me.incidents') }}">
                 <i class="fa fa-flag"></i>

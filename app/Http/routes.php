@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::auth();
 
 /*
@@ -24,6 +20,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Home
     Route::get('/home', 'HomeController@index');
+    Route::get('/', 'HomeController@index');
     Route::get('/me/incidents', 'HomeController@index')->name('me.incidents');
     Route::get('/me/networks', 'HomeController@networks')->name('me.networks');
 
@@ -32,10 +29,18 @@ Route::group(['middleware' => 'auth'], function () {
 
     // User Profile
     Route::get('/me', 'UserController@showCurrentUserProfile')->name('me');
+    Route::get('/me/update', 'HomeController@userUpdate')->name('me.update');
+    Route::post('/me/update', 'HomeController@storeUserUpdate');
 
     // Join a network
-    Route::get('/n/{n}/join', 'NetworkController@joinCheck')->name('n.joinCheck');
-    Route::post('/n/{n}/join', 'NetworkController@join')->name('n.join');
+    Route::get('/n/{n}/join', 'NetworkController@join')->name('n.join');
+    // Accept an invitation to a network
+    Route::get('/n/{n}/accept', 'NetworkController@accept')->name('n.accept');
+    // Leave a network
+    Route::get('/n/{n}/leave', 'NetworkController@leave')->name('n.leave');
+    // Update users in a network
+    Route::get('/n/{n}/update_users', 'NetworkController@updateUsers')->name('n.updateUsers');
+    Route::post('/n/{n}/update_users', 'NetworkController@storeUpdateUsers');
 
     // Resource Routes
     Route::resource('file', 'UploadController');

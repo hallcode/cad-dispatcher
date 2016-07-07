@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Location;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Update extends Model
@@ -55,7 +57,12 @@ class Update extends Model
             foreach ($this->incident->users as $user)
             {
                 $subject = 'Update to ' . $this->incident->grade->name . ' ' . $this->incident->type->name;
-                $headline = 'A ' . $this->incident->grade->name . ' grade '. $this->incident->type->name .' you are assigned to has been updated.';
+                $headline = 'A ' . $this->incident->grade->name . ' ' . $this->incident->type->name .' you are assigned to has been updated by:<ul>';
+                foreach ($this->users as $user2)
+                {
+                    $headline .= '<li>' . $user2->first_name . ' ' . $user2->last_name . '</li>';
+                }
+                $headline .= '</ul>';
 
                 $body = $this->incident->set_date . ' [' . $this->incident->ref . '] <br><br>';
                 $body .= $this->dets . '<br><br>';
@@ -67,11 +74,45 @@ class Update extends Model
                 }
                 else
                 {
-                    $body .= 'Next update required in: (dd:hh:mm)' . $this->incident->due_in;
+                    $body .= 'Next update required in: (dd:hh:mm) ' . $this->incident->due_in;
                 }
 
-                $user->sendEmail($subject, $headline, $body);
+                $returns[] = $user->sendEmail($subject, $headline, $body);
             }
+        }
+    }
+
+    // Set location
+    public function setLocation($formatted_address, $type, $lat, $lng, $note = null)
+    {
+        $locations = Location::get()
+            ->where('formatted_address', $formatted_address)
+            ->where('lat', $lat)
+            ->where('lng', $lng);
+        
+        if ($locations->count() == 0)
+        {
+            // Create new location
+            $loc = new Location;
+                $loc->formatted_address = $formatted_address;
+                $loc->type = $type;
+                $loc->lat = $lat;
+                $loc->lng = $lng;
+                if (!empty($note))
+                {
+                    $loc->notes = $note;
+                }
+            $loc->save();
+
+            // Attach user to new location
+            $this->location_id = $loc->id;
+            $this->save();
+        }
+        else
+        {
+            // Assosiate with existing one
+            $this->location_id = $locations->last()->id;
+            $this->save();
         }
     }
 }

@@ -44,7 +44,7 @@ class Network extends Model
     // Users belonging to the network
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withPivot('is_mod', 'is_accepted');
     }
 
     // The user that created the network

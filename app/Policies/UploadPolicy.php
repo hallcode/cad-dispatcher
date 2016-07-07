@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use App\User;
+use App\Upload;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class FilePolicy
+class UploadPolicy
 {
     use HandlesAuthorization;
 

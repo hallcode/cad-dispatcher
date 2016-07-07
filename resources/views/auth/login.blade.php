@@ -6,12 +6,14 @@ Login
 @endsection
 
 @section('tabs')
-<a href="{{url('/login')}}" class="active item">
-    <i class="fa fa-sign-in"></i> Login
-</a>
-<a href="{{url('/register')}}" class="item">
-    <i class="fa fa-user-plus"></i> Sign Up
-</a>
+<div class="ui tabular menu" style="border-bottom: none; margin-top: 0;">
+    <a href="{{url('/login')}}" class="active item">
+        <i class="fa fa-sign-in"></i> Login
+    </a>
+    <a href="{{url('/register')}}" class="item">
+        <i class="fa fa-user-plus"></i> Sign Up
+    </a>
+</div>
 @endsection
 
 @section('content')

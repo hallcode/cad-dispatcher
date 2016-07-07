@@ -10,8 +10,10 @@
 
 @section('buttons')
 <a class="ui secondary button" href="{{ route('incident.create', ['network' => $network->code]) }}"><i class="fa fa-plus"></i>New Incident</a>
-<a class="ui secondary button" href="#"><i class="fa fa-user"></i>Set User Status / Location</a>
-
+@if (Auth::user()->can('mod', $network))
+<a class="ui secondary button" href="{{ route('n.updateUsers', ['network' => $network->code]) }}"><i class="fa fa-user"></i>Set User Status / Location</a>
+@endif
+<a class="ui secondary button" href="{{ route('n.leave', ['network' => $network->code]) }}"><i class="fa fa-sign-out"></i>Leave Network</a>
 @endsection
 
 @section('tabs')
@@ -19,21 +21,25 @@
     <a href="#" class="active item">
         <i class="fa fa-home"></i> Dash
     </a>
+    <!-- not yet implemented
     <a href="#" class="item">
         <i class="fa fa-map-o"></i> Map
     </a>
     <a href="#" class="item">
         <i class="fa fa-users"></i> Members
     </a>
+    @if (Auth::user()->can('mod', $network))
     <a href="#" class="item">
         <i class="fa fa-gear"></i> Settings
     </a>
+    @endif
+    -->
 </div>
 @endsection
 
 @section('page-content')
 <div id="incident_list">
-    <h4>Incidents ({{ $network->incidents->count() }})</h4>
+    <h4>Incidents (@{{ list.length }})</h4>
     <p>List of all unresulted incidents in this network.</p>
     <div class="ui message" style="text-align: center" v-if="list.length == 0">
         There are currently no active incidents in this network. <a href="{{ route('incident.create', ['network' => $network->code]) }}">Create a new incident.</a>
@@ -67,16 +73,16 @@
 <div class="ui divider"></div>
 
 <div id="user_list">
-    <h4>Users ({{ $network->users->count() }})</h4>
+    <h4>Users (@{{ list.length }})</h4>
     <p>List of all active users in this network.</p>
     <div class="ui message" style="text-align: center" v-if="list.length == 0">
         There are currently no available users.
     </div>
-    <table class="ui table" v-else>
+    <table class="ui small table" v-else>
         <tbody>
-            <tr v-for="u in list | orderBy 'due_in_raw'" track-by="id">
+            <tr v-for="u in list | orderBy 'order' -1" track-by="id">
                 <td>
-                    <a href="u.link">@{{ u.name }}</a>
+                    <a href="@{{u.link}}">@{{ u.name }}</a>
                 </td>
                 <td>@{{ u.call_sign }}</td>
                 <td>

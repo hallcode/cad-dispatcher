@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Incident;
+use App\Policies\IncidentPolicy;
+use App\Network;
+use App\Policies\NetworkPolicy;
+use App\Upload;
+use App\Policies\UploadPolicy;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,7 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        Incident::class => IncidentPolicy::class,
+        Network::class => NetworkPolicy::class,
+        Upload::class => UploadPolicy::class,
     ];
 
     /**

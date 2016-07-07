@@ -1,5 +1,5 @@
 <div style="font-family: Arial, Helvetica, sans-serif; font-size: 0.95rem">
-    <b>{{ $headline }}</b>
+    <b>{!! $headline !!}</b>
     <p>
         {!! $body !!}
     </p>

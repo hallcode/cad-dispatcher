@@ -4,13 +4,18 @@
     thought his willy was broke.
     He tugged it and lugged it
     and gave it a poke.
-    But all of his effort just
+    But all of his effort, just
     went up in smoke.
+
+    There was once a girl
+    thought her fanny was stale.
+    She rubbed it and scrubbed it
+    ...
 
     There was once a boy
     thought his willy was broke.
-    Turns out all he needed
-    was one horny bloke ;)
+    Turns out all he needed, was
+    one horny bloke.
 
     - Alex Hall, {{ date("Y") }}
 -->

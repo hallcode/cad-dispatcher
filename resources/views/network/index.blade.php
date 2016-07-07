@@ -30,17 +30,20 @@ All Networks
         <div class="content">
             <p>{{ str_limit($network->description, 200) }}</p>
             <div class="meta">
-                @if ($network->users->contains(Auth::user()->id))
+                @if (Auth::user()->can('view', $network))
                 <span class="isMember">You are a member.</span>
                 @endif
             </div>
         </div>
         <div class="extra content">
             <span class="right floated">
-            @if ($network->users->contains(Auth::user()->id) == false)
+            @if (Auth::user()->cannot('view', $network) && Auth::user()->cannot('accept', $network))
                 <a class="ui tiny button" href="{{ route('n.join', ['n' => $network->code]) }}">Join</a>
-            @endif
+            @elseif (Auth::user()->can('accept', $network))
+                <a class="ui tiny primary button" href="{{ route('n.accept', ['n' => $network->code]) }}">Accept Invitation</a>
+            @else
                 <a class="ui tiny secondary button" href="{{ route('n.show', ['n' => $network->code]) }}">View</a>
+            @endif
             </span>
         </div>
     </div>

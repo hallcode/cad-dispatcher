@@ -68,7 +68,7 @@
         </p>
 
         <p style="text-align: center">
-            You can create an incident by going to one of your <a href="{{url('/networks')}}">Networks</a> and adding it there.
+            You can create an incident by going to one of your <a href="{{ route('me.networks') }}">Networks</a> and adding it there.
         </p>  
 
         <p style="text-align: center">

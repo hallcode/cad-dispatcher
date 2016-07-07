@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\Location;
+use App\Status;
+
 use \ClickSendLib\Controllers\SMSController as SMS;
 use Carbon\Carbon;
 use Mail;
@@ -74,7 +77,7 @@ class User extends Authenticatable
     // Networks the user is a member of
     public function networks()
     {
-        return $this->belongsToMany('App\Network');
+        return $this->belongsToMany('App\Network')->withPivot('is_mod', 'is_accepted');
     }
 
     // The networks that the user has created
@@ -112,7 +115,7 @@ class User extends Authenticatable
     {
         $status = $this->statuses->last();
         
-        $label = '<a class="ui grey label">';
+        $label = '<a class="ui grey label" style="margin: 0.2em">';
         $label .= '<i class="inverted '.$status->color.' circle icon popup" data-position="top center" data-content="'.$status->name.'" data-variation="inverted small"></i>';
         $label .= e($this->first_name) . ' ' . e($this->last_name);
         $label .= '<div class="detail">' . $this->serial . '</div>';
@@ -134,7 +137,7 @@ class User extends Authenticatable
             $messages = [
                 [
                     "source" => "php",
-                    "from" => str_limit($network->name, 0, 11),
+                    "from" => $network->code,
                     "body" => str_limit($message, 157),
                     "to" => $this->sms,
                     "custom_string" => "Message: " . Carbon::now()->toDateTimeString()
@@ -171,5 +174,43 @@ class User extends Authenticatable
             $message->to($this->email, $this->first_name . ' ' . $this->last_name);
             $message->priority($priority);
         });   
+    }
+
+    // Set location
+    public function setLocation($formatted_address, $type, $lat, $lng, $note = null)
+    {
+        $locations = Location::get()
+            ->where('formatted_address', $formatted_address)
+            ->where('lat', $lat)
+            ->where('lng', $lng);
+        
+        if ($locations->count() == 0)
+        {
+            // Create new location
+            $loc = new Location;
+                $loc->formatted_address = $formatted_address;
+                $loc->type = $type;
+                $loc->lat = $lat;
+                $loc->lng = $lng;
+                if (!empty($note))
+                {
+                    $loc->note = $note;
+                }
+            $loc->save();
+
+            // Attach user to new location
+            $this->locations()->attach($loc->id);
+        }
+        else
+        {
+            // Assosiate with existing one
+            $this->locations()->attach($locations->last()->id);
+        }
+    }
+
+    // Set status
+    public function setStatus($status_id)
+    {
+        $this->statuses()->attach($status_id);
     }
 }

@@ -36,6 +36,11 @@ class NetworkIncidentController extends Controller
     {
         $network = Network::findFromCode($network_code);
 
+        if (Auth::user()->cannot('view', $network))
+        {
+            return abort(403);
+        }
+
         $types = Type::where('default', 1)->get();
         $default_grades = Grade::where('default', 1)->get();
 
@@ -58,24 +63,19 @@ class NetworkIncidentController extends Controller
         // Get correct network
         $network = Network::findFromCode($network_code);
 
+        if (Auth::user()->cannot('view', $network))
+        {
+            return abort(403);
+        }
+
         // Validate form
         $this->validate($request, [
             'eventType' => 'required',
             'grade' => 'required',
-            'users' => 'required',
             'dets' => 'required',
             'localSearch' => 'required',
             'location' => 'present',
         ]);
-
-        // Create Location
-        $location = new Location;
-           $location->formatted_address = $request->formatted_address;
-           $location->type = $request->type;
-           $location->lat = $request->lat;
-           $location->lng = $request->lng;
-           $location->notes = $request->location_note;
-        $location->save();
 
         // Generate Reference
         $new_ref = Incident::withTrashed()->get()->filter(function($value, $key) {
@@ -89,14 +89,17 @@ class NetworkIncidentController extends Controller
             $incident->type_id = $request->eventType;
             $incident->grade_id = $request->grade;
             $incident->creator_id = Auth::user()->id;
-            $incident->location_id = $location->id;
+            $incident->location_id = 0;
             $incident->dets = $request->dets;
             $incident->type_id = $request->eventType;
-            if (isset($request->date) && $request->set_date != '')
+            if (strlen($request->date))
             {
                 $incident->date = date("Y-m-d H:i:s", strtotime($request->date));
             }
         $incident->save();
+
+        // Create Location
+        $incident->setLocation($request->formatted_address, $request->type, $request->lat, $request->lng, $request->location_note);
 
         // Attach users
         $user_ids = explode(',', $request->users);
@@ -120,6 +123,12 @@ class NetworkIncidentController extends Controller
     {
         // Get Network
         $network = Network::findFromCode($network_code);
+
+        // Authorise
+        if (Auth::user()->cannot('view', $network))
+        {
+            return abort(403);
+        }
 
         // Get Incident
         $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
@@ -207,6 +216,11 @@ class NetworkIncidentController extends Controller
         // Get Network
         $network = Network::findFromCode($network_code);
 
+        if (Auth::user()->cannot('view', $network))
+        {
+            return abort(403);
+        }
+
         // Get Incident
         $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
         
@@ -228,34 +242,27 @@ class NetworkIncidentController extends Controller
      * @return \Illuminate\Http\Response
      */
      public function storeUpdate(Request $request, $network_code, $incident_date, $incident_ref)
-     {
-         // Step one: validate all the fields.
-         $this->validate($request, [
-             'users' => 'required',
-             'dets' => 'required',
-             'localSearch' => 'required',
-             'location' => 'present',
-         ]);
+     {   
+        // Step one: validate all the fields.
+        $this->validate($request, [
+            'users' => 'required',
+            'dets' => 'required',
+        ]);
 
          // Get network
          $network = Network::findFromCode($network_code);
 
+         if (Auth::user()->cannot('view', $network))
+         {
+             return abort(403);
+         }
+
          // Get incident
          $incident = Incident::findFromRef($network->id, $incident_date, $incident_ref);
-
-         // Create location in database
-         $location = new Location;
-            $location->formatted_address = $request->formatted_address;
-            $location->type = $request->type;
-            $location->lat = $request->lat;
-            $location->lng = $request->lng;
-            $location->notes = $request->location_note;
-         $location->save();
 
          // Create new update
          $update = new Update;
             $update->incident_id = $incident->id;
-            $update->location_id = $location->id;
             $update->dets = $request->dets;
             if ($request->isResult == '1')
             {
@@ -264,19 +271,31 @@ class NetworkIncidentController extends Controller
             else {
                 $update->result = 0;
             }
-         $update->save();
+            // Paceholder location ID until update is saved. 
+            $update->location_id = 0;
+        $update->save();
 
-         // Assign Users to Update
-         $user_ids = explode(',', $request->users);
-         $update->users()->attach($user_ids);
+        if (!empty($request->formatted_address))
+        {
+            // Create location in database
+            $update->setLocation($request->formatted_address, $request->type, $request->lat, $request->lng, $request->location_note);
+        }
+        else {
+            $update->location_id = $incident->location->id;
+            $update->save();
+        }
 
-         $update->notifyUsers();
+        // Assign Users to Update
+        $user_ids = explode(',', $request->users);
+        $update->users()->attach($user_ids);
 
-         if ($request->isResult == 1)
-         {
-             $incident->delete();
-         }
+        $update->notifyUsers();
 
-         return redirect(route('incident.show', ['network' => $incident->network->code, 'date' => camel_case($incident->set_date), 'ref' => $incident->ref]));
+        if ($request->isResult == 1)
+        {
+            $incident->delete();
+        }
+
+        return redirect(route('incident.show', ['network' => $incident->network->code, 'date' => camel_case($incident->set_date), 'ref' => $incident->ref]));
      }
 }

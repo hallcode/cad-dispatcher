@@ -34,7 +34,18 @@
                 <tr>
                     <td class="four wide">Ref</td>
                     <td class="eleven wide">
-                        {{$incident->set_date}} / {{$incident->ref}}
+                        {{ date('d m y', strtotime($incident->set_timestamp)) }} / {{$incident->ref}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Date / Time</td>
+                    <td>
+                        <span class="date" style="margin-right: 2em">
+                            <i class="fa fa-calendar-o"></i> {{ date('jS F Y', strtotime($incident->set_timestamp)) }}
+                        </span>
+                        <span class="time">
+                            <i class="fa fa-clock-o"></i> {{ date('H:i', strtotime($incident->set_timestamp)) }}
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -50,7 +61,12 @@
                 </tr>
                 <tr>
                     <td>Location</td>
-                    <td>{{$incident->location->formatted_address}}</td>
+                    <td>
+                        {{$incident->location->formatted_address}}
+                        @if (!empty($incident->location->note))
+                            {{ $incident->location->note }}
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                 @if ($incident->trashed())

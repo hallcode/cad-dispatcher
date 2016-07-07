@@ -1,37 +1,35 @@
 @extends('layouts.app')
 
 @section('title')
-<i class="fa fa-retweet"></i>Update Incident: <small>{{$incident->set_date}} / <b>{{ $incident->ref }}</b></small>
+<i class="fa fa-retweet"></i>Update users by bulk</small>
 @endsection
 
 @section('content')
-<div class="ui container" style="margin-bottom: 2rem">Use this form to add an update to an active incident.</div>
+<div class="ui container" style="margin-bottom: 2rem">Use this form update the status and location of users on this network.</div>
 
-<form class="ui form segments" role="form" method="POST" action="{{ route('incident.storeUpdate', ['network' => $incident->network->code, 'date' => camel_case($incident->set_date), 'ref' => $incident->ref]) }}">
+<form class="ui form" role="form" method="POST" action="{{ route('n.updateUsers', ['n' => $network->code]) }}">
 {{ csrf_field() }}
 
-<div class="ui segment">
+<div class="ui segments">
+    <div class="ui segment">
     
         <div class="ui stackable divided grid">
             <div class="eight wide column">
-                <h4>Details</h4>
-                <p>
-                    All fields in this section are required.
-                </p>
+                <h4>Status</h4>
 
                 <div class="field {{ $errors->has('users') ? 'error' : '' }}">
                     <label>Users</label>
-                    <p>Select the user(s) the update is from.</p>
+                    <p>Select the user(s) you wish to assign to this incident.</p>
                     <div class="ui fluid multiple search selection dropdown">
                         <input id="users" name="users" type="hidden" multiple>
                         <i class="dropdown icon"></i>
                         <div class="default text">Select User(s)</div>
                         <div class="menu">
                             @foreach ($network->users as $user)
-                            <div class="item" data-value="{{ $user->id }}">
-                                {{ $user->first_name }} {{ strtoupper($user->last_name) }} {{ $user->serial }}
-                                <div class="ui {{ $user->statuses->last()->color }} label">{{ $user->statuses->last()->name }}</div>                    
-                            </div>
+                                <div class="item" data-value="{{ $user->id }}">
+                                    {{ $user->first_name }} {{ strtoupper($user->last_name) }} {{ $user->serial }}
+                                    <div class="ui {{ $user->statuses->last()->color }} label">{{ $user->statuses->last()->name }}</div>                    
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -42,27 +40,24 @@
                     @endif
                 </div>
 
-                <div class="field {{ $errors->has('dets') ? 'error' : '' }}">
-                    <label>Details</label>
-                    <p>Enter details regarding the update.</p>
-                    <textarea class="ui input" id="dets" name="dets"></textarea>
-                    @if ($errors->has('dets'))
-                        <div class="ui negative message">
-                            {{ $errors->first('dets') }}
+                <div class="field {{ $errors->has('status') ? 'error' : '' }}">
+                    <label>Status</label>
+                    <p>Select the correct status.</p>
+                    <div class="ui fluid search selection dropdown">
+                        <input id="status" name="status" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Select Status</div>
+                        <div class="menu">
+                            @foreach ($statuses as $status)
+                            <div class="item" data-value="{{ $status->id }}">
+                                <div class="ui small {{ $status->color }} label">{{ $status->name}}</div>                    
+                            </div>
+                            @endforeach
                         </div>
-                    @endif
-                </div>
-
-                <div class="field {{ $errors->has('isResult') ? 'error' : '' }}">
-                    <label>Result Incident</label>
-                    <p>Set whether the update is the result. This will close the incident so it is no longer active.</p>
-                    <div class="ui toggle checkbox">
-                        <input type="checkbox" name="isResult" value="1">
-                        <label>There will be no more updates for this incident.</label>
                     </div>
-                    @if ($errors->has('isResult'))
+                    @if ($errors->has('status'))
                         <div class="ui negative message">
-                            {{ $errors->first('isResult') }}
+                            {{ $errors->first('status') }}
                         </div>
                     @endif
                 </div>
@@ -110,9 +105,11 @@
     </div>
 
     <div class="ui right aligned segment">
-        <a href="{{ route('incident.show', ['network' => $incident->network->code, 'date' => camel_case($incident->set_date), 'ref' => $incident->ref]) }}" class="ui button">Cancel</a>
+        <a href="{{ route('n.show', ['n' => $network->code]) }}" class="ui button">Cancel</a>
         <button class="ui primary button">Save</button>
     </div>
+
+</div>
 
 </form>
 

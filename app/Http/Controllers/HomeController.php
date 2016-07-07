@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Auth;
 use App\Incident;
+use App\Status;
 
 class HomeController extends Controller
 {
@@ -53,7 +54,7 @@ class HomeController extends Controller
                 "network_link" => route('network.show', ['network' => $incident->network->code]),
                 "ref" => $incident->set_date . ' / ' . $incident->ref,
                 "type" => $incident->type->name,
-                "dets" => $incident->dets,
+                "dets" => str_limit($incident->dets, 150),
                 "updates" => $incident->updates->count(),
                 "grade_name" => $incident->grade->name,
                 "grade_color" => $incident->grade->color,
@@ -65,5 +66,29 @@ class HomeController extends Controller
         }
 
         return json_encode($array);
+    }
+
+    public function userUpdate()
+    {
+        $statuses = Status::get();
+        
+        return view('update', ['statuses' => $statuses, 'page_title' => 'Update Status & Location']);
+    }
+
+    public function storeUserUpdate(Request $request)
+    {
+        if (!empty($request->formatted_address))
+        {
+            // User supplied an address, update it.
+            Auth::user()->setLocation($request->formatted_address, $request->type, $request->lat, $request->lng, $request->location_note);
+        }
+
+        if (!empty($request->status))
+        {
+            // User supplied an status.
+            Auth::user()->setStatus($request->status);
+        }
+
+        return redirect(route('me.incidents'));
     }
 }
